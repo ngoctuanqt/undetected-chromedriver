@@ -19,7 +19,7 @@ by UltrafunkAmsterdam (https://github.com/ultrafunkamsterdam)
 """
 
 
-__version__ = "3.1.6"
+__version__ = "3.1.6r1"
 
 
 import json
@@ -38,6 +38,7 @@ import selenium.webdriver.chrome.webdriver
 import selenium.webdriver.common.service
 import selenium.webdriver.remote.webdriver
 import selenium.webdriver.remote.command
+from selenium.webdriver.chrome.service import Service
 
 from .cdp import CDP
 from .options import ChromeOptions
@@ -121,6 +122,8 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
         use_subprocess=False,
         debug=False,
         no_sandbox=True,
+        service_creationflags=None,
+        version_full = None,
         **kw
     ):
         """
@@ -407,6 +410,12 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
             )
             self.browser_pid = browser.pid
 
+        if service_creationflags:
+            service = Service(patcher.executable_path, port, service_args, service_log_path)
+            service.creationflags = service_creationflags
+        else:
+            service = None
+
         super(Chrome, self).__init__(
             executable_path=patcher.executable_path,
             port=port,
@@ -415,6 +424,7 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
             desired_capabilities=desired_capabilities,
             service_log_path=service_log_path,
             keep_alive=keep_alive,
+            service=service,  # needed or the service will be re-created 
         )
 
         self.reactor = None
