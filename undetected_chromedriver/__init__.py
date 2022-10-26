@@ -19,7 +19,7 @@ by UltrafunkAmsterdam (https://github.com/ultrafunkamsterdam)
 """
 
 
-__version__ = "3.1.6r1"
+__version__ = "3.1.6r2"
 
 
 import json
